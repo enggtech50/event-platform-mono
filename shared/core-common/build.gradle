@@ -1,0 +1,9 @@
+plugins {
+  id 'tech-engg5.library-conventions'
+}
+
+group 'com.tech.engg5'
+
+repositories {
+  mavenCentral()
+}

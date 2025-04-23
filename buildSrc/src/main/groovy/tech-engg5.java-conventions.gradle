@@ -1,0 +1,54 @@
+plugins {
+  id 'java'
+  id 'application'
+  id 'org.springframework.boot'
+  id 'io.spring.dependency-management'
+  id 'jacoco'
+}
+
+repositories {
+  gradlePluginPortal()
+  mavenCentral()
+}
+
+sourceCompatibility = JavaVersion.VERSION_17
+
+ext {
+  set('springCloudVersion', '2024.0.1')
+}
+
+configurations {
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
+  customConfig.extendsFrom testImplementation
+}
+
+jacoco {
+  toolVersion = "0.8.11"
+  reportsDirectory = file("$buildDir/customJacocoReportDir")
+}
+
+dependencyManagement {
+  imports {
+    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+  }
+}
+
+dependecies {
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.3'
+  implementation 'org.springframework.cloud:spring-cloud-starter:3.1.8'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.2'
+}
+
+task copyNativeDeps(type: Copy) {
+  from(configurations.customConfig) {
+    include '*.dll'
+    include '*.dylib'
+    include '*.so'
+  }
+  into 'native-libs'
+  doLast {
+    println "Native java-libraries generated"
+  }
+}
