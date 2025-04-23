@@ -1,0 +1,3 @@
+rootProject.name = 'event-platform-mono'
+include 'shared:core-common'
+
