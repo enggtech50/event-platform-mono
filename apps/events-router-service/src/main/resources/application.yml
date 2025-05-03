@@ -1,0 +1,55 @@
+server:
+  port: 8080
+  compression:
+    enabled: true
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-exception: false
+
+management:
+  info:
+    git:
+      enabled: true
+      mode: full
+    endpoints:
+      web:
+        exposure:
+          include: health, info, env
+    endpoint:
+      health:
+        show-components: always
+        show-details: always
+      env:
+        additional-keys-to-sanitize: spring.data.mongodb.uri
+
+spring:
+  application:
+    name: events-router-service
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+    listener:
+      ack-mode: MANUAL
+      concurrency: 1
+      missing-topics-fatal: false
+      idle-between-polls: 0
+    properties:
+      spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+      spring.deserializer.value.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+
+events:
+  router:
+    consumer:
+      topic: book-events-dev
+      group-id: events.router.service.dev
+      auto-startup: true
+      seek-type: beginning
+      rewind-messages: 1
+      offset: 0
+      partition-number: -1
+      pause-consuming: false

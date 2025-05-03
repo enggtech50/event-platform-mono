@@ -1,3 +1,4 @@
 rootProject.name = 'event-platform-mono'
-include 'shared:core-common'
+include 'shared:core-common', 'shared:core-consumer'
+include 'apps:events-router-service'
 

@@ -2,8 +2,13 @@ plugins {
   id 'tech-engg5.library-conventions'
 }
 
-group 'com.tech.engg5'
+group 'com.tech.engg5.common'
 
 repositories {
+  gradlePluginPortal()
   mavenCentral()
+}
+
+bootJar {
+  enabled = false
 }
