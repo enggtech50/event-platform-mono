@@ -1,0 +1,35 @@
+plugins {
+  id 'tech-engg5.library-conventions'
+}
+
+group = 'com.tech.engg5.events.router'
+
+java {
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(17)
+  }
+}
+
+configurations {
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
+}
+
+repositories {
+  gradlePluginPortal()
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'org.springframework.kafka:spring-kafka:3.1.1'
+  implementation project(':shared:core-common')
+  implementation project(':shared:core-consumer')
+  implementation 'junit:junit:4.13.2'
+  testImplementation 'org.springframework.kafka:spring-kafka-test:3.1.1'
+  testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+}
+
+tasks.named('test') {
+  useJUnitPlatform()
+}

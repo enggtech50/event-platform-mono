@@ -1,0 +1,24 @@
+plugins {
+  id 'tech-engg5.library-conventions'
+}
+
+group = 'com.tech.engg5.consumer'
+
+repositories {
+  gradlePluginPortal()
+  mavenCentral()
+}
+
+dependencies {
+  api 'org.springframework.kafka:spring-kafka:3.1.1'
+  api project(':shared:core-common')
+  testImplementation 'org.springframework.kafka:spring-kafka-test:4.0.0-M1'
+}
+
+test {
+  useJUnitPlatform()
+}
+
+bootJar {
+  enabled = false
+}
