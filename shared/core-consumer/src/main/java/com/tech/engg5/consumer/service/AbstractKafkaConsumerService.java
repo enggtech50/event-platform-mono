@@ -36,8 +36,7 @@ public abstract class AbstractKafkaConsumerService implements ConsumerSeekAware 
     LOG.info("Received message: [{}], from offset - [{}]", message, metadata.offset());
     persistMessage(message, metadata, key);
     ack.acknowledge();
-    LOG.info("Acknowledged message: [{}], from offset - [{}], partitionNumber - [{}]", message, metadata.offset(),
-      metadata.partition());
+    LOG.info("Acknowledged from offset - [{}], partitionNumber - [{}]", metadata.offset(), metadata.partition());
 
     if (pauseConsuming()) {
       LOG.info("Stop consuming messages.");

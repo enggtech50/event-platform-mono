@@ -1,6 +1,13 @@
 package com.tech.engg5.events.router.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tech.engg5.common.model.BookEventPayload;
+import com.tech.engg5.events.router.Fixture;
 import com.tech.engg5.events.router.properties.KafkaConsumerProperties;
+import com.tech.engg5.events.router.repository.BookEventRawMongoRepository;
+import com.tech.engg5.persistence.model.mongo.BookEventRaw;
+import lombok.SneakyThrows;
+import lombok.val;
 import org.apache.kafka.common.TopicPartition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,10 +45,18 @@ public class KafkaConsumerServiceTest {
   @Mock
   private ConsumerSeekAware.ConsumerSeekCallback callback;
 
+  @Mock
+  private ObjectMapper objectMapper;
+
+  @Mock
+  private BookRawEventService bookRawEventService;
+
   @BeforeEach
   void setUp() {
     kafkaConsumerService = new KafkaConsumerService();
     ReflectionTestUtils.setField(kafkaConsumerService, "kafkaConsumerProperties", consumerProperties);
+    ReflectionTestUtils.setField(kafkaConsumerService, "objectMapper", objectMapper);
+    ReflectionTestUtils.setField(kafkaConsumerService, "bookRawEventService", bookRawEventService);
   }
 
   @Test
@@ -56,15 +71,20 @@ public class KafkaConsumerServiceTest {
   }
 
   @Test
+  @SneakyThrows
   @DisplayName("Test persistMessage logs message and offset")
   void testPersistMessage(CapturedOutput output) {
-    String message = "test-message";
+    String message = Fixture.RAW_REQUESTS.loadFixture("raw-message.json");
     String key = "test-key";
     when(metadata.offset()).thenReturn(123L);
+    when(metadata.partition()).thenReturn(0);
+    BookEventPayload payload = new BookEventPayload();
+    when(objectMapper.readValue(message, BookEventPayload.class)).thenReturn(payload);
 
     kafkaConsumerService.persistMessage(message, metadata, key);
 
-    assertThat(output).containsSequence("Persisting message: [test-message] from offset: [123]");
+    assertThat(output).containsSequence("Persisting message: [" + message + "] from offset: [123]");
+    verify(bookRawEventService, times(1)).saveOrUpdateRawEvent(payload, 123L, 0);
   }
 
   @Test
@@ -76,5 +96,21 @@ public class KafkaConsumerServiceTest {
     kafkaConsumerService.onPartitionsAssigned(assignments, callback);
 
     verify(callback, never()).seek(anyString(), anyInt(), anyLong());
+  }
+
+  @Test
+  @SneakyThrows
+  @DisplayName("Verify raw message is deserialized to object")
+  void shouldConvertRawMessagetoObject() {
+
+    String message = Fixture.RAW_REQUESTS.loadFixture("raw-message.json");
+    BookEventPayload payload = BookEventPayload.builder().alertDataId("tua12da-12132nd1-12poij").build();
+
+    when(objectMapper.readValue(message, BookEventPayload.class)).thenReturn(payload);
+
+    val event = objectMapper.readValue(message, BookEventPayload.class);
+
+    assertThat(event).isNotNull();
+    assertThat(event.getAlertDataId()).isEqualTo("tua12da-12132nd1-12poij");
   }
 }

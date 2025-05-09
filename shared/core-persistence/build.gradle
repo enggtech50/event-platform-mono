@@ -1,0 +1,27 @@
+plugins {
+  id 'tech-engg5.library-conventions'
+}
+
+group = 'com.tech.engg5.persistence'
+
+repositories {
+  gradlePluginPortal()
+  mavenCentral()
+}
+
+dependencies {
+  api project(':shared:core-common')
+  implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+
+  annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+  testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+  useJUnitPlatform()
+}
+
+bootJar {
+  enabled = false
+}

@@ -23,8 +23,15 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -106,7 +113,7 @@ public class AbstractKafkaConsumerServiceTest {
 
     TestConsumer t = new TestConsumer(provider);
     t.assignPartition(assignmentsHavingOneTopic, callback);
-    verify(callback, Mockito.times(0)).seekRelative(anyString(), anyInt(), anyLong(), anyBoolean());
+    verify(callback, times(0)).seekRelative(anyString(), anyInt(), anyLong(), anyBoolean());
   }
 
   @Test
@@ -117,7 +124,7 @@ public class AbstractKafkaConsumerServiceTest {
     provider.setRewindCount(100);
     provider.setSeekType(ConsumerConstants.REWIND);
     consumer.assignPartition(assignmentsHavingOneTopic, callback);
-    verify(callback, Mockito.times(0)).seekRelative(anyString(), anyInt(), anyLong(), anyBoolean());
+    verify(callback, times(0)).seekRelative(anyString(), anyInt(), anyLong(), anyBoolean());
   }
 
   @Test
@@ -128,7 +135,7 @@ public class AbstractKafkaConsumerServiceTest {
     provider.setRewindCount(-100);
     provider.setSeekType(ConsumerConstants.REWIND);
     consumer.assignPartition(assignmentsHavingOneTopic, callback);
-    verify(callback, Mockito.times(1)).seekRelative("test", 1, -100, true);
+    verify(callback, times(1)).seekRelative("test", 1, -100, true);
   }
 
   @Test
@@ -139,7 +146,7 @@ public class AbstractKafkaConsumerServiceTest {
     provider.setRewindCount(-100);
     provider.setSeekType(ConsumerConstants.REWIND_FROM_END);
     consumer.assignPartition(assignmentsHavingOneTopic, callback);
-    verify(callback, Mockito.times(1)).seekRelative("test", 1, -100, false);
+    verify(callback, times(1)).seekRelative("test", 1, -100, false);
   }
 
   @Test
@@ -150,7 +157,7 @@ public class AbstractKafkaConsumerServiceTest {
     provider.setRewindCount(100);
     provider.setSeekType(ConsumerConstants.REWIND_FROM_END);
     consumer.assignPartition(assignmentsHavingOneTopic, callback);
-    verify(callback, Mockito.times(0)).seekRelative(anyString(), anyInt(), anyLong(), anyBoolean());
+    verify(callback, times(0)).seekRelative(anyString(), anyInt(), anyLong(), anyBoolean());
   }
 
   @Test

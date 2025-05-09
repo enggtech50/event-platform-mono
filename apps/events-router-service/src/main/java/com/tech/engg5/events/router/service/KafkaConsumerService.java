@@ -1,5 +1,8 @@
 package com.tech.engg5.events.router.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tech.engg5.common.exception.DatabaseException;
+import com.tech.engg5.common.model.BookEventPayload;
 import com.tech.engg5.consumer.properties.AbstractKafkaConsumerProperties;
 import com.tech.engg5.consumer.service.AbstractKafkaConsumerService;
 import com.tech.engg5.events.router.properties.KafkaConsumerProperties;
@@ -25,6 +28,12 @@ public class KafkaConsumerService extends AbstractKafkaConsumerService {
   private static final Logger LOG = LoggerFactory.getLogger(KafkaConsumerService.class);
 
   @Autowired
+  private ObjectMapper objectMapper;
+
+  @Autowired
+  private BookRawEventService bookRawEventService;
+
+  @Autowired
   protected KafkaConsumerProperties kafkaConsumerProperties;
 
   @Override
@@ -41,8 +50,15 @@ public class KafkaConsumerService extends AbstractKafkaConsumerService {
 
   @Override
   protected void persistMessage(String message, ConsumerRecordMetadata metadata, String key) {
-    //Implement logic to persist the message into mongoDB.
     LOG.info("Persisting message: [{}] from offset: [{}]", message, metadata.offset());
+
+    try {
+      BookEventPayload rawPayload = objectMapper.readValue(message, BookEventPayload.class);
+      bookRawEventService.saveOrUpdateRawEvent(rawPayload, metadata.offset(), metadata.partition());
+    } catch (Exception exc) {
+      LOG.error("Error while persisting message: [{}] from offset: [{}]", message, metadata.offset(), exc);
+      throw new DatabaseException("Error while persisting message", exc);
+    }
   }
 
   @Override
