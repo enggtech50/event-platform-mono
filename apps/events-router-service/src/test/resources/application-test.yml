@@ -1,0 +1,18 @@
+spring:
+  data:
+    mongodb:
+      port: 27017
+  kafka:
+    bootstrap-servers: localhost:9092
+
+events:
+  router:
+    consumer:
+      topic: demo-topic
+      group-id: demo-group
+      auto-startup: true
+      seek-type: beginning
+      rewind-messages: 1
+      offset: 0
+      partition-number: -1
+      pause-consuming: false

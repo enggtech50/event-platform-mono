@@ -26,6 +26,11 @@ management:
 spring:
   application:
     name: events-router-service
+  data:
+    mongodb:
+      database: localEnv
+      host: localhost
+      port: 27017
   kafka:
     bootstrap-servers: localhost:9092
     consumer:
@@ -41,6 +46,7 @@ spring:
     properties:
       spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
       spring.deserializer.value.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+      spring.json.trusted.packages: "*"
 
 events:
   router:

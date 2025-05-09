@@ -1,0 +1,25 @@
+{
+  "alertDataId": "tua12da-12132nd1-12poij",
+  "bookInfo": {
+    "bookId": "abc123-xyz456",
+    "bookName": "World Book Dictionary",
+    "bookGenre": [
+      "Knowledge"
+    ],
+    "bookPublisher": [
+      "ABC Incorporation"
+    ],
+    "bookPublishingDate": "09-10-1992",
+    "bookAuthor": "John Doe"
+  },
+  "transactionType": "PAYMENT_CANCELLED",
+  "bookEventInfo": {
+    "transactionCancelled": {
+      "transactionId": "1oi2h1iu2hbo1hiop1he",
+      "transactionAmount": "302",
+      "transactionMethodLastFourDigits": "4123",
+      "transactionDate": "10-04-2025",
+      "transactionPayeeName": "Daniels J"
+    }
+  }
+}

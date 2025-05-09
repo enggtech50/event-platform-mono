@@ -25,9 +25,26 @@ dependencies {
   implementation 'org.springframework.kafka:spring-kafka:3.1.1'
   implementation project(':shared:core-common')
   implementation project(':shared:core-consumer')
+  implementation project(':shared:core-persistence')
   implementation 'junit:junit:4.13.2'
+  implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+  implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+  annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
   testImplementation 'org.springframework.kafka:spring-kafka-test:3.1.1'
   testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+}
+
+def additionalCompilerArgs = [
+  "-Amapstruct.defaultComponentModel=spring",
+  "-Amapstruct.unmappedTargetPolicy=ERROR",
+  "-Amapstruct.defaultInjectionStrategy=constructor"
+]
+
+compileJava {
+  options.encoding = 'UTF-8'
+  options.compilerArgs += additionalCompilerArgs
 }
 
 tasks.named('test') {

@@ -54,15 +54,29 @@ dependencies {
 
   implementation 'org.springframework.kafka:spring-kafka:3.1.9'
   implementation 'org.springframework.cloud:spring-cloud-starter:4.0.2'
+  implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+  implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
   compileOnly 'org.projectlombok:lombok:1.18.26'
   annotationProcessor 'org.projectlombok:lombok:1.18.26'
+  annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 
   testCompileOnly 'org.projectlombok:lombok:1.18.26'
   testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 
   testImplementation 'org.springframework.kafka:spring-kafka-test:3.1.9'
   testImplementation 'org.springframework.boot:spring-boot-starter-test:3.2.4'
+}
+
+def additionalCompilerArgs = [
+  "-Amapstruct.defaultComponentModel=spring",
+  "-Amapstruct.unmappedTargetPolicy=ERROR",
+  "-Amapstruct.defaultInjectionStrategy=constructor"
+]
+
+compileJava {
+  options.encoding = 'UTF-8'
+  options.compilerArgs += additionalCompilerArgs
 }
 
 task copyNativeDeps(type: Copy) {
